@@ -34,15 +34,17 @@ function App() {
     const [isMenuActive, setIsMenuActive] = useState(false);
 
     useEffect(() => {
-        Promise.all([api.getCards(), api.getUser()])
-            .then(([cards, user]) => {
-                setCurrentUser(user);
-                setCards(cards);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-    }, [])
+        if (loggedIn) {
+            Promise.all([api.getCards(), api.getUser()])
+                .then(([cards, user]) => {
+                    setCurrentUser(user);
+                    setCards(cards);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        }
+    }, [loggedIn])
 
     useEffect(() => {
         tokenCheck();
@@ -62,7 +64,14 @@ function App() {
                     setLoggedIn(true);
                     navigate('/myprofile', {replace: true});
                 }
-            });
+            })
+                .catch((error) => {
+                    console.log(error);
+                    setLoggedIn(false);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
         }
     }
 
@@ -212,9 +221,14 @@ function App() {
 
     function handelRegistration(values) {
         auth.register(values.email, values.password).then((res) => {
-            setIsSuccess(true);
-            setIsInfoTooltip(true);
-            navigate('/signin', {replace: true});
+            if(res) {
+                setIsSuccess(true);
+                setIsInfoTooltip(true);
+                navigate('/signin', {replace: true});
+            } else {
+                setIsSuccess(true);
+                setIsInfoTooltip(false);
+            }
         })
             .catch((err) => {
                 console.log(err)
@@ -251,72 +265,72 @@ function App() {
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <div className="App">
-                    <div className="page">
-                        <Header
-                            onSignOut={signOut}
-                            loggedIn={loggedIn}
-                            user={userData}
-                            onLogOut={setLoggedIn}
-                            isMenuActive={isMenuActive}
-                            showMenu={setIsMenuActive}/>
-                        <Routes>
-                            <Route path="/"
-                                   element={loggedIn ? <Navigate to="/myprofile" replace/> :
-                                       <Navigate to="/signin" replace/>}/>
-                            <Route path="/signin" element={<Login
-                                onSignin={handelLogin}
-                            />}/>
-                            <Route path="/signup" element={<Register
-                                onSignup={handelRegistration}
-                            />}/>
-                            <Route path="/myprofile" element={
-                                <ProtectedRoute
-                                    loggedIn={loggedIn}
-                                    onCardLike={handleCardLike}
-                                    onCardDelete={handleCardDeletePopup}
-                                    onEditProfile={handelEditProfileClick}
-                                    onAddPlace={handelAddPlaceClick}
-                                    onEditAvatar={handelEditAvatarClick}
-                                    currentUser={currentUser}
-                                    cards={cards}
-                                    onCardClick={handleCardClick}
-                                    element={Main}
-                                />
-                            }/>
-                        </Routes>
-                        <Footer/>
-                        <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen}
-                                         onClose={closeAllPopups}
-                                         onClickOverlay={handelOverlayClose}
-                                         isLoading={isLoading}/>
-                        <AddPlacePopup onAddPlace={handleAddPlaceSubmit}
-                                       isOpen={isAddPlacePopupOpen}
-                                       onClose={closeAllPopups}
-                                       onClickOverlay={handelOverlayClose}
-                                       isLoading={isLoading}/>
-                        <EditProfilePopup
-                            onUpdateUser={handleUpdateUser}
-                            isOpen={isEditProfilePopupOpen}
-                            onClose={closeAllPopups}
-                            onClickOverlay={handelOverlayClose}
-                            isLoading={isLoading}
-                        />
-                        <ImagePopup card={selectedCard} onClose={closeAllPopups} onClickOverlay={handelOverlayClose}
-                                    isOpen={isImagePopupOpen}/>
-                        <CardPopupDelete
-                            card={selectedCard}
-                            isOpen={isDeleteCardPopupOpen}
-                            onClose={closeAllPopups}
-                            onDelete={handleCardDelete}
-                            isLoading={isLoading}
-                        />
-                        <InfoTooltip isOpen={isSuccess}
+                <div className="page">
+                    <Header
+                        onSignOut={signOut}
+                        loggedIn={loggedIn}
+                        user={userData}
+                        onLogOut={setLoggedIn}
+                        isMenuActive={isMenuActive}
+                        showMenu={setIsMenuActive}/>
+                    <Routes>
+                        <Route path="/"
+                               element={loggedIn ? <Navigate to="/myprofile" replace/> :
+                                   <Navigate to="/signin" replace/>}/>
+                        <Route path="/signin" element={<Login
+                            onSignin={handelLogin}
+                        />}/>
+                        <Route path="/signup" element={<Register
+                            onSignup={handelRegistration}
+                        />}/>
+                        <Route path="/myprofile" element={
+                            <ProtectedRoute
+                                loggedIn={loggedIn}
+                                onCardLike={handleCardLike}
+                                onCardDelete={handleCardDeletePopup}
+                                onEditProfile={handelEditProfileClick}
+                                onAddPlace={handelAddPlaceClick}
+                                onEditAvatar={handelEditAvatarClick}
+                                currentUser={currentUser}
+                                cards={cards}
+                                onCardClick={handleCardClick}
+                                element={Main}
+                            />
+                        }/>
+                    </Routes>
+                    <Footer/>
+                    <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen}
                                      onClose={closeAllPopups}
                                      onClickOverlay={handelOverlayClose}
-                                     isModal={isInfoTooltip}
-                        />
-                    </div>
+                                     isLoading={isLoading}/>
+                    <AddPlacePopup onAddPlace={handleAddPlaceSubmit}
+                                   isOpen={isAddPlacePopupOpen}
+                                   onClose={closeAllPopups}
+                                   onClickOverlay={handelOverlayClose}
+                                   isLoading={isLoading}/>
+                    <EditProfilePopup
+                        onUpdateUser={handleUpdateUser}
+                        isOpen={isEditProfilePopupOpen}
+                        onClose={closeAllPopups}
+                        onClickOverlay={handelOverlayClose}
+                        isLoading={isLoading}
+                    />
+                    <ImagePopup card={selectedCard} onClose={closeAllPopups} onClickOverlay={handelOverlayClose}
+                                isOpen={isImagePopupOpen}/>
+                    <CardPopupDelete
+                        card={selectedCard}
+                        isOpen={isDeleteCardPopupOpen}
+                        onClose={closeAllPopups}
+                        onDelete={handleCardDelete}
+                        isLoading={isLoading}
+                    />
+                    <InfoTooltip isOpen={isSuccess}
+                                 onClose={closeAllPopups}
+                                 onClickOverlay={handelOverlayClose}
+                                 isModal={isInfoTooltip}
+                    />
                 </div>
+            </div>
         </CurrentUserContext.Provider>
     );
 }
