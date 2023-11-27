@@ -247,13 +247,10 @@ function App() {
             }
         })
             .catch((err) => {
-                setIsSuccess(true);
-                setIsInfoTooltip(false);
-                console.log(err)
+                console.log(err);
             })
             .finally(() => {
                 setIsLoading(false);
-                setIsSuccess(false);
             });
     }
 
