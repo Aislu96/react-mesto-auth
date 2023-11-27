@@ -242,6 +242,7 @@ function App() {
         auth.login(values.email, values.password).then((res) => {
             if (res.token) {
                 setLoggedIn(true);
+                setUserData({email: values.email})
                 navigate('/myprofile', {replace: true});
             }
         })
@@ -252,6 +253,7 @@ function App() {
             })
             .finally(() => {
                 setIsLoading(false);
+                setIsSuccess(false);
             });
     }
 

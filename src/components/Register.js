@@ -26,7 +26,7 @@ const Register = ({onSignup}) => {
                            maxLength="40" onChange={handleChange} value={values.email || ''} required/>
                     <span id="email-error" className={`auth__input-error ${errors.email}`}>{errors.email || ''}</span>
                     <input name="password" className={`auth__input ${errors.password && 'popup__input_type_error'}`}
-                           type="text" placeholder="Пароль" minLength="2"
+                           type="password" placeholder="Пароль" minLength="2"
                            maxLength="40" onChange={handleChange} value={values.password || ''} required/>
                     <span id="password-error" className={`auth__input-error ${errors.password}`}>{errors.password || ''}</span>
                     <button type="submit" className={!isValid? "auth__button auth__button_text" : "auth__button"} onSubmit={handleSubmit}>Зарегистрироваться</button>
