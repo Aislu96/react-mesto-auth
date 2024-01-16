@@ -9,7 +9,7 @@
 
 ## Функционал:
 
-* [Одностраничный сайт](https://aislu96.github.io/mesto-react-auth/)
+* [Одностраничный сайт](https://aislu96.github.io/react-mesto-auth/)
 
 ------
 
