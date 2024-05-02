@@ -4,12 +4,12 @@
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
 ## Описание проекта:
-
+Сервис Mesto: интерактивная страница, куда можно зарегистрироваться и добавлять фотографии, удалять их и ставить лайки.
 ------
 
 ## Функционал:
 
-* [Одностраничный сайт](https://aislu96.github.io/react-mesto-auth/)
+* [Cайт](https://aislu96.github.io/react-mesto-auth/)
 
 ------
 
